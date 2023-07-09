@@ -33,6 +33,13 @@ let resumeData = {
         "MonthOfPassing":"May",
         "YearOfPassing":"2022",
         "Achievements":"Some Achievements"
+      },
+      {
+        "UniversityName":"Ames High School",
+        "specialization":"High School Diploma",
+        "MonthOfPassing":"May",
+        "YearOfPassing":"2022",
+        "Achievements":"Some Achievements"
       }
     ],
     "work":[
