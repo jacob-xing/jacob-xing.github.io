@@ -18,7 +18,7 @@ let resumeData = {
       ],
     "aboutme":"I am currently a second year student at the University of Minnesota studying Compute Engineering.",
     "address":"United States",
-    "website":"https://rbhatia46.github.io",
+    "website":"https://jacob-xing.github.io",
     "education":[
       {
         "UniversityName":"University of Minnesota",
