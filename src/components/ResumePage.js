@@ -19,13 +19,35 @@ export default function ResumePage({ resumeData, navigate }) {
           <div className="cad-card-header">
             <div>
               <div className="cad-card-title">{e.school}</div>
-              <div className="cad-card-subtitle">{e.degree}</div>
+              <div className="cad-card-subtitle">{e.degree} · {e.location}</div>
             </div>
             <div className="cad-card-period">{e.period}</div>
           </div>
           <div className="cad-card-body">{e.details}</div>
+          {e.courses && e.courses.length > 0 && (
+            <div style={{ marginTop: '8px' }}>
+              {e.courses.map((c, j) => <span key={j} className="cad-tag">{c}</span>)}
+            </div>
+          )}
         </div>
       ))}
+
+      {/* ── Honors & Awards ───────────────────────────────────── */}
+      {resumeData.honors && (
+        <>
+          <div className="cad-section-header">
+            <div className="cad-section-title">Honors &amp; Awards</div>
+            <div className="cad-section-line" />
+          </div>
+          <div className="cad-card">
+            <div className="cad-card-body">
+              {resumeData.honors.map((h, i) => (
+                <div key={i} className="cad-bullet">{h}</div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ── Skills ────────────────────────────────────────────── */}
       <div className="cad-section-header">
@@ -45,6 +67,23 @@ export default function ResumePage({ resumeData, navigate }) {
         ))}
       </div>
 
+      {/* ── Publications ──────────────────────────────────────── */}
+      {resumeData.publications && resumeData.publications.length > 0 && (
+        <>
+          <div className="cad-section-header">
+            <div className="cad-section-title">Publications</div>
+            <div className="cad-section-line" />
+          </div>
+          {resumeData.publications.map((p, i) => (
+            <div key={i} className="cad-card">
+              <div className="cad-card-body" style={{ fontStyle: 'italic', color: '#ccc' }}>
+                {p.citation}
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+
       {/* ── Download placeholder ──────────────────────────────── */}
       <div className="cad-section-header">
         <div className="cad-section-title">Documents</div>
@@ -56,10 +95,8 @@ export default function ResumePage({ resumeData, navigate }) {
             <div className="cad-card-title">Full Résumé (PDF)</div>
             <div className="cad-card-subtitle">[INSERT: upload your PDF resume and link it here]</div>
           </div>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a href="#" className="cad-btn">Download PDF</a>
-        </div>
-        <div className="cad-card-body">
-          [INSERT: brief note about your resume, last updated date, etc.]
         </div>
       </div>
     </CadencePage>
