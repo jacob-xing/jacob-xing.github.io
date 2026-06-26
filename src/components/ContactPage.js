@@ -42,17 +42,17 @@ export default function ContactPage({ resumeData, navigate }) {
 
         <div className="cad-contact-item">
           <div className="cad-contact-label">Location</div>
-          <div className="cad-contact-value">[INSERT: City, State]</div>
+          <div className="cad-contact-value">Wisenbaker Engineering Research Center, 188 Bizzell St, Bryan, TX 77801</div>
         </div>
 
         <div className="cad-contact-item">
           <div className="cad-contact-label">Phone</div>
-          <div className="cad-contact-value">[INSERT: phone number or remove]</div>
+          <div className="cad-contact-value">Please email me</div>
         </div>
 
         <div className="cad-contact-item">
           <div className="cad-contact-label">Availability</div>
-          <div className="cad-contact-value">[INSERT: e.g. Open to internships Summer 2025]</div>
+          <div className="cad-contact-value">Looking for Summer 2027 Internships</div>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function ContactPage({ resumeData, navigate }) {
       </div>
       <div className="cad-card">
         <div className="cad-card-body">
-          [INSERT: any personal note, preferred contact method, response time expectation, etc.]
+          Please email me for the fastest response. My school email is jxing@tamu.edu if academic related.
         </div>
       </div>
     </CadencePage>

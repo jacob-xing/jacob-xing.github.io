@@ -6,8 +6,8 @@ export default function ResumePage({ resumeData, navigate }) {
     <CadencePage
       navigate={navigate}
       currentPage="resume"
-      title="Résumé / CV"
-      breadcrumb="jacob-xing :: resume :: schematic"
+      title="Education"
+      breadcrumb="jacob-xing :: education :: schematic"
     >
       {/* ── Education ─────────────────────────────────────────── */}
       <div className="cad-section-header">
@@ -31,6 +31,23 @@ export default function ResumePage({ resumeData, navigate }) {
           )}
         </div>
       ))}
+
+      {/* ── Publications ──────────────────────────────────────── */}
+      {resumeData.publications && resumeData.publications.length > 0 && (
+        <>
+          <div className="cad-section-header">
+            <div className="cad-section-title">Publications</div>
+            <div className="cad-section-line" />
+          </div>
+          {resumeData.publications.map((p, i) => (
+            <div key={i} className="cad-card">
+              <div className="cad-card-body" style={{ fontStyle: 'italic', color: '#ccc' }}>
+                {p.citation}
+              </div>
+            </div>
+          ))}
+        </>
+      )}
 
       {/* ── Honors & Awards ───────────────────────────────────── */}
       {resumeData.honors && (
@@ -67,38 +84,6 @@ export default function ResumePage({ resumeData, navigate }) {
         ))}
       </div>
 
-      {/* ── Publications ──────────────────────────────────────── */}
-      {resumeData.publications && resumeData.publications.length > 0 && (
-        <>
-          <div className="cad-section-header">
-            <div className="cad-section-title">Publications</div>
-            <div className="cad-section-line" />
-          </div>
-          {resumeData.publications.map((p, i) => (
-            <div key={i} className="cad-card">
-              <div className="cad-card-body" style={{ fontStyle: 'italic', color: '#ccc' }}>
-                {p.citation}
-              </div>
-            </div>
-          ))}
-        </>
-      )}
-
-      {/* ── Download placeholder ──────────────────────────────── */}
-      <div className="cad-section-header">
-        <div className="cad-section-title">Documents</div>
-        <div className="cad-section-line" />
-      </div>
-      <div className="cad-card">
-        <div className="cad-card-header">
-          <div>
-            <div className="cad-card-title">Full Résumé (PDF)</div>
-            <div className="cad-card-subtitle">[INSERT: upload your PDF resume and link it here]</div>
-          </div>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="cad-btn">Download PDF</a>
-        </div>
-      </div>
     </CadencePage>
   );
 }

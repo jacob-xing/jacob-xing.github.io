@@ -82,6 +82,22 @@ export default function ExperiencePage({ resumeData, navigate }) {
           ))}
         </>
       )}
+
+      {/* ── Documents ─────────────────────────────────────────── */}
+      <div className="cad-section-header">
+        <div className="cad-section-title">Documents</div>
+        <div className="cad-section-line" />
+      </div>
+      <div className="cad-card">
+        <div className="cad-card-header">
+          <div>
+            <div className="cad-card-title">Full Résumé (PDF)</div>
+            <div className="cad-card-subtitle">[INSERT: upload your PDF resume and link it here]</div>
+          </div>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a href="#" className="cad-btn">Download PDF</a>
+        </div>
+      </div>
     </CadencePage>
   );
 }

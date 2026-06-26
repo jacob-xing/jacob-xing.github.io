@@ -1,22 +1,22 @@
 /* Cadence Virtuoso color palette */
 :root {
-  --cad-bg: #2b2b2b;
-  --cad-panel: #3a3a3a;
-  --cad-panel-light: #444;
-  --cad-border: #555;
-  --cad-border-light: #666;
+  --cad-bg: #000000;
+  --cad-panel: #0d0d0d;
+  --cad-panel-light: #1a1a1a;
+  --cad-border: #2a2a2a;
+  --cad-border-light: #333;
   --cad-menubar: #d4d0c8;
   --cad-menubar-text: #1a1a1a;
   --cad-toolbar: #c8c4bc;
-  --cad-canvas: #1e2e1e;
-  --cad-grid: rgba(0, 180, 0, 0.15);
-  --cad-wire: #00cc00;
+  --cad-canvas: #000000;
+  --cad-grid: rgba(255, 255, 255, 0.15);
+  --cad-wire: #00cccc;
   --cad-text-bright: #e8e4dc;
   --cad-text-dim: #aaa;
   --cad-accent: #00aa00;
   --cad-accent2: #4da6ff;
-  --cad-highlight: #005500;
-  --cad-selection: #003300;
+  --cad-highlight: #001a00;
+  --cad-selection: #001a1a;
   --cad-status: #c0c0c0;
 }
 

@@ -168,22 +168,80 @@
   flex-shrink: 0;
 }
 
-.cad-left-panel  { width: 160px; border-right: 2px solid var(--cad-border); }
+.cad-left-panel  { width: 240px; border-right: 2px solid var(--cad-border); transition: width 0.2s ease; }
 .cad-right-panel { width: 180px; border-left: 2px solid var(--cad-border); border-right: none; }
 
+/* Collapsed sidebar — only shows the title strip */
+.cad-left-panel.cad-panel-collapsed {
+  width: 28px;
+  overflow: hidden;
+}
+
+.cad-left-panel.cad-panel-collapsed .cad-panel-section,
+.cad-left-panel.cad-panel-collapsed .cad-prop-row,
+.cad-left-panel.cad-panel-collapsed .cad-panel-title ~ *,
+.cad-left-panel.cad-panel-collapsed [class^="cad-prop"],
+.cad-left-panel.cad-panel-collapsed .cad-net-dot {
+  display: none;
+}
+
+.cad-panel-toggle {
+  background: none;
+  border: none;
+  color: #1a1a1a;
+  font-size: 9px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.cad-panel-toggle:hover { opacity: 1; }
+
+/* When collapsed, rotate the title vertically and show only the toggle */
+.cad-left-panel.cad-panel-collapsed .cad-panel-title {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  justify-content: flex-end;
+  height: 100%;
+  padding: 8px 0;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  gap: 6px;
+}
+
+.cad-left-panel.cad-panel-collapsed .cad-panel-toggle {
+  writing-mode: horizontal-tb;
+  transform: none;
+  font-size: 9px;
+}
+
+/* home page only — light grey sidebars */
+.cad-body .cad-panel {
+  background: #cecece;
+  border-color: #aaa;
+}
+.cad-body .cad-left-panel  { border-right-color: #aaa; }
+.cad-body .cad-right-panel { border-left-color:  #aaa; }
+
 .cad-panel-title {
-  background: #505050;
-  color: var(--cad-text-bright);
+  background: #b0b0b0;
+  color: #1a1a1a;
   font-size: 11px;
   font-weight: bold;
   padding: 3px 8px;
-  border-bottom: 1px solid var(--cad-border-light);
+  border-bottom: 1px solid #999;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .cad-panel-section {
-  border-bottom: 1px solid var(--cad-border);
+  border-bottom: 1px solid #aaa;
   padding-bottom: 2px;
   margin-bottom: 2px;
 }
@@ -191,15 +249,15 @@
 .cad-panel-row {
   padding: 2px 8px;
   font-size: 11px;
-  color: var(--cad-text-bright);
+  color: #1a1a1a;
   cursor: default;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.cad-panel-row:hover   { background: #4a4a4a; }
-.cad-panel-row.header  { color: var(--cad-text-dim); font-size: 10px; text-transform: uppercase; padding-top: 4px; }
+.cad-panel-row:hover   { background: #bbbbbb; }
+.cad-panel-row.header  { color: #555; font-size: 10px; text-transform: uppercase; padding-top: 4px; }
 .cad-panel-row.selected { background: #0055a5; color: #fff; }
 
 /* ── Properties panel ───────────────────────────────────────── */
@@ -207,19 +265,19 @@
   display: flex;
   align-items: center;
   padding: 2px 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
   gap: 6px;
 }
 
 .cad-prop-key {
-  color: var(--cad-text-dim);
+  color: #555;
   font-size: 10px;
   width: 72px;
   flex-shrink: 0;
 }
 
 .cad-prop-val {
-  color: var(--cad-text-bright);
+  color: #1a1a1a;
   font-size: 11px;
   word-break: break-all;
 }
@@ -237,6 +295,12 @@
   position: relative;
   overflow: hidden;
   background: var(--cad-canvas);
+  cursor: crosshair;
+  user-select: none;
+}
+
+.cad-canvas-area.cad-dragging {
+  cursor: grabbing;
 }
 
 .cad-canvas {
@@ -244,31 +308,50 @@
   top: 0;
   left: 0;
   display: block;
-  cursor: crosshair;
+  cursor: inherit;
 }
 
-/* ── Identity card overlay ───────────────────────────────────── */
+/* ── Pan/zoom overlay wrapper ────────────────────────────────── */
+.cad-schematic-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;     /* let the container catch mouse events for drag */
+  will-change: transform;
+}
+
+/* Re-enable pointer events only on interactive children */
+.cad-schematic-overlay .cad-identity-card,
+.cad-schematic-overlay .cad-nav-big-btn {
+  pointer-events: auto;
+}
+
+/* ── Wire SVG overlay ────────────────────────────────────────── */
+.cad-wire-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+
 .cad-identity-card {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(30, 46, 30, 0.92);
+  background: rgba(0, 0, 0, 0.92);
   border: 1.5px solid #00cc00;
-  padding: 24px 28px;
-  min-width: 380px;
-  max-width: 520px;
+  padding: 20px 22px;
   box-shadow: 0 0 30px rgba(0, 204, 0, 0.2), inset 0 0 20px rgba(0,0,0,0.3);
   z-index: 10;
+  box-sizing: border-box;
 }
 
 .cad-identity-inner {
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid rgba(0,204,0,0.3);
-  padding-bottom: 16px;
+  padding-bottom: 0;
 }
 
 .cad-id-chip-symbol {
@@ -318,28 +401,27 @@
 }
 
 /* ── Nav buttons ─────────────────────────────────────────────── */
-.cad-nav-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
 .cad-nav-big-btn {
-  background: #1a1a1a;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.92);
   border: 1px solid #00aa00;
   color: #00dd00;
-  padding: 10px 14px;
+  padding: 18px 14px;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
+  align-items: center;
   font-family: 'Courier New', Courier, monospace;
   transition: background 0.12s, border-color 0.12s;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  justify-content: center;
+  gap: 5px;
+  z-index: 10;
+  box-sizing: border-box;
 }
 
 .cad-nav-big-btn:hover {
-  background: #003300;
+  background: #001a1a;
   border-color: #00ff00;
   box-shadow: 0 0 8px rgba(0,204,0,0.3);
 }
@@ -359,11 +441,11 @@
 .cad-statusbar {
   display: flex;
   align-items: center;
-  background: #222;
+  background: #000;
   color: var(--cad-status);
   height: 20px;
   min-height: 20px;
-  border-top: 1px solid #444;
+  border-top: 1px solid #2a2a2a;
   font-size: 11px;
   flex-shrink: 0;
   overflow: hidden;
@@ -371,7 +453,7 @@
 
 .cad-status-cell {
   padding: 0 10px;
-  border-right: 1px solid #444;
+  border-right: 1px solid #2a2a2a;
   white-space: nowrap;
   height: 100%;
   display: flex;
@@ -505,7 +587,7 @@
 
 /* ── Page title area ─────────────────────────────────────────── */
 .cad-page-title-bar {
-  background: #1a1a1a;
+  background: #000000;
   border-bottom: 2px solid #00aa00;
   padding: 10px 32px;
   display: flex;
@@ -528,7 +610,7 @@
 
 /* ── Back / action button ─────────────────────────────────────── */
 .cad-btn {
-  background: #1a1a1a;
+  background: #000000;
   border: 1px solid #00aa00;
   color: #00dd00;
   padding: 5px 14px;
@@ -538,7 +620,7 @@
 }
 
 .cad-btn:hover {
-  background: #003300;
+  background: #001a1a;
   border-color: #00ff00;
 }
 
@@ -596,4 +678,59 @@
 
 .cad-contact-value a:hover {
   text-decoration: underline;
+}
+
+/* ── Mobile canvas overlay (scrollable, no transform) ───────── */
+.cad-canvas-mobile {
+  overflow-y: auto;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Override the base .cad-schematic-overlay absolute positioning for mobile */
+.cad-mobile-overlay {
+  position: relative !important;  /* flow-based so container grows with content */
+  height: auto !important;
+  will-change: auto;
+  transform: none !important;
+}
+
+.cad-mobile-overlay .cad-identity-card,
+.cad-mobile-overlay .cad-nav-big-btn {
+  pointer-events: auto;
+}
+
+/* ── Mobile / touch improvements ────────────────────────────── */
+@media (max-width: 640px) {
+  /* Hide dense status bar cells on mobile */
+  .cad-status-cell {
+    display: none;
+  }
+  .cad-status-cell:first-child {
+    display: flex;
+  }
+
+  /* Desktop-only toolbar elements */
+  .cad-toolbar-desktop-only {
+    display: none;
+  }
+
+  /* Larger toolbar nav buttons on touch */
+  .cad-tool-btn.cad-nav-btn {
+    height: 34px;
+    padding: 4px 10px;
+    font-size: 16px;
+  }
+
+  /* Menubar: compress logo text */
+  .cad-menubar-logo {
+    font-size: 9px;
+    padding: 0 6px;
+    letter-spacing: 0;
+  }
+
+  .cad-menu-item {
+    padding: 0 6px;
+    font-size: 11px;
+  }
 }
