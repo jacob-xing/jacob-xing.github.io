@@ -1,26 +1,24 @@
-import React, { Component } from 'react';
-import Header from './components/Header';
-import About from './components/About';
-import Resume from './components/Resume';
-import Portfolio from './components/Portfolio';
-import Testimonials from  './components/Testimonials';
-import ContactUs from './components/ContactUs';
-import Footer from './components/Footer';
+import React, { useState } from 'react';
+import CadenceHome from './components/CadenceHome';
+import ResumePage from './components/ResumePage';
+import ExperiencePage from './components/ExperiencePage';
+import ProjectsPage from './components/ProjectsPage';
+import ContactPage from './components/ContactPage';
 import resumeData from './resumeData';
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Header resumeData={resumeData}/>
-        <About resumeData={resumeData}/>
-        <Resume resumeData={resumeData}/>
-        <Portfolio resumeData={resumeData}/>
-        <Testimonials resumeData={resumeData}/>
-        <ContactUs resumeData={resumeData}/>
-        <Footer resumeData={resumeData}/>
-      </div>
-    );
-  }
-}
+import './App.css';
 
-export default App;
+export default function App() {
+  const [page, setPage] = useState('home');
+
+  const navigate = (p) => setPage(p);
+
+  const pages = {
+    home: <CadenceHome resumeData={resumeData} navigate={navigate} />,
+    resume: <ResumePage resumeData={resumeData} navigate={navigate} />,
+    experience: <ExperiencePage resumeData={resumeData} navigate={navigate} />,
+    projects: <ProjectsPage resumeData={resumeData} navigate={navigate} />,
+    contact: <ContactPage resumeData={resumeData} navigate={navigate} />,
+  };
+
+  return pages[page] || pages['home'];
+}

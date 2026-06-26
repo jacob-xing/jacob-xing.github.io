@@ -1,15 +1,43 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  
-  -moz-osx-font-smoothing: grayscale;
+/* Cadence Virtuoso color palette */
+:root {
+  --cad-bg: #2b2b2b;
+  --cad-panel: #3a3a3a;
+  --cad-panel-light: #444;
+  --cad-border: #555;
+  --cad-border-light: #666;
+  --cad-menubar: #d4d0c8;
+  --cad-menubar-text: #1a1a1a;
+  --cad-toolbar: #c8c4bc;
+  --cad-canvas: #1e2e1e;
+  --cad-grid: rgba(0, 180, 0, 0.15);
+  --cad-wire: #00cc00;
+  --cad-text-bright: #e8e4dc;
+  --cad-text-dim: #aaa;
+  --cad-accent: #00aa00;
+  --cad-accent2: #4da6ff;
+  --cad-highlight: #005500;
+  --cad-selection: #003300;
+  --cad-status: #c0c0c0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background: var(--cad-bg);
+  color: var(--cad-text-bright);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
 }
