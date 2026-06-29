@@ -339,28 +339,14 @@
 
 .cad-identity-card {
   position: absolute;
-  background: rgba(0, 0, 0, 0.92);
-  border: 1.5px solid #00cc00;
-  padding: 20px 22px;
-  box-shadow: 0 0 30px rgba(0, 204, 0, 0.2), inset 0 0 20px rgba(0,0,0,0.3);
   z-index: 10;
-  box-sizing: border-box;
+  overflow: visible;
 }
 
 .cad-identity-inner {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding-bottom: 0;
-}
-
-.cad-id-chip-symbol {
-  flex-shrink: 0;
-  opacity: 0.9;
-}
-
-.cad-id-info {
-  flex: 1;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .cad-id-name {
@@ -403,38 +389,23 @@
 /* ── Nav buttons ─────────────────────────────────────────────── */
 .cad-nav-big-btn {
   position: absolute;
-  background: rgba(0, 0, 0, 0.92);
-  border: 1px solid #00aa00;
-  color: #00dd00;
-  padding: 18px 14px;
   cursor: pointer;
-  text-align: center;
-  align-items: center;
-  font-family: 'Courier New', Courier, monospace;
-  transition: background 0.12s, border-color 0.12s;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
   z-index: 10;
-  box-sizing: border-box;
+  overflow: visible;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: opacity 0.12s;
 }
 
 .cad-nav-big-btn:hover {
-  background: #001a1a;
-  border-color: #00ff00;
-  box-shadow: 0 0 8px rgba(0,204,0,0.3);
+  opacity: 0.85;
+  filter: drop-shadow(0 0 6px rgba(0,255,0,0.45));
 }
 
-.cad-nav-btn-label {
-  font-size: 13px;
-  font-weight: bold;
-  color: #00ff00;
-}
-
-.cad-nav-btn-desc {
-  font-size: 10px;
-  color: #669966;
+.cad-nav-big-btn:hover polygon,
+.cad-nav-big-btn:hover circle {
+  stroke: #00ff00;
 }
 
 /* ── Status bar ──────────────────────────────────────────────── */
@@ -507,8 +478,8 @@
 .cad-section-line {
   flex: 1;
   height: 1px;
-  background: #00aa00;
-  opacity: 0.4;
+  background: #ffffff;
+  opacity: 0.2;
 }
 
 .cad-section-title {
@@ -523,7 +494,7 @@
 /* ── Card blocks ─────────────────────────────────────────────── */
 .cad-card {
   background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(0,204,0,0.2);
+  border: 1px solid rgba(255,255,255,0.12);
   padding: 14px 18px;
   margin-bottom: 12px;
 }
@@ -543,7 +514,7 @@
 
 .cad-card-subtitle {
   font-size: 12px;
-  color: #88cc88;
+  color: #ffffff;
   margin-top: 2px;
 }
 
@@ -564,7 +535,7 @@
   gap: 8px;
   margin-top: 4px;
   font-size: 12px;
-  color: #aaa;
+  color: #ffffff;
 }
 
 .cad-bullet::before {
@@ -576,9 +547,9 @@
 /* ── Tag chips ───────────────────────────────────────────────── */
 .cad-tag {
   display: inline-block;
-  background: #003300;
-  border: 1px solid #00aa00;
-  color: #00dd00;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #ffffff;
   font-size: 10px;
   padding: 2px 8px;
   margin: 2px;
@@ -588,7 +559,7 @@
 /* ── Page title area ─────────────────────────────────────────── */
 .cad-page-title-bar {
   background: #000000;
-  border-bottom: 2px solid #00aa00;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
   padding: 10px 32px;
   display: flex;
   align-items: center;
@@ -620,8 +591,8 @@
 }
 
 .cad-btn:hover {
-  background: #001a1a;
-  border-color: #00ff00;
+  background: #1a1a1a;
+  border-color: rgba(255,255,255,0.6);
 }
 
 /* ── Skills grid ─────────────────────────────────────────────── */
@@ -633,7 +604,7 @@
 
 .cad-skills-cat {
   background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(0,204,0,0.2);
+  border: 1px solid rgba(255,255,255,0.12);
   padding: 12px 16px;
 }
 
@@ -654,7 +625,7 @@
 
 .cad-contact-item {
   background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(0,204,0,0.2);
+  border: 1px solid rgba(255,255,255,0.12);
   padding: 16px 20px;
 }
 

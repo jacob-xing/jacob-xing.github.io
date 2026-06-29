@@ -1,5 +1,6 @@
 import React from 'react';
 import CadencePage from './CadencePage';
+import resumePdf from '../Resume.pdf';
 
 export default function ExperiencePage({ resumeData, navigate }) {
   return (
@@ -92,10 +93,9 @@ export default function ExperiencePage({ resumeData, navigate }) {
         <div className="cad-card-header">
           <div>
             <div className="cad-card-title">Full Résumé (PDF)</div>
-            <div className="cad-card-subtitle">[INSERT: upload your PDF resume and link it here]</div>
+            <div className="cad-card-subtitle">download my resume</div>
           </div>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="cad-btn">Download PDF</a>
+          <a href={resumePdf} download="Jacob_Xing_Resume.pdf" className="cad-btn">Download PDF</a>
         </div>
       </div>
     </CadencePage>

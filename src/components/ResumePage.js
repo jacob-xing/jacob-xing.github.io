@@ -41,7 +41,7 @@ export default function ResumePage({ resumeData, navigate }) {
           </div>
           {resumeData.publications.map((p, i) => (
             <div key={i} className="cad-card">
-              <div className="cad-card-body" style={{ fontStyle: 'italic', color: '#ccc' }}>
+              <div className="cad-card-body" style={{ fontStyle: 'italic', color: '#ffffff' }}>
                 {p.citation}
               </div>
             </div>

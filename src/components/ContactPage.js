@@ -62,7 +62,7 @@ export default function ContactPage({ resumeData, navigate }) {
         <div className="cad-section-line" />
       </div>
       <div className="cad-card">
-        <div className="cad-card-body" style={{ fontSize: '13px', lineHeight: '1.7', color: '#ccc' }}>
+        <div className="cad-card-body" style={{ fontSize: '13px', lineHeight: '1.7', color: '#ffffff' }}>
           {resumeData.about}
         </div>
       </div>

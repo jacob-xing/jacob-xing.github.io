@@ -246,12 +246,12 @@ function StatusBar({ text, coords = '' }) {
  */
 
 // Block dimensions (px) — used for both CSS sizing and SVG wire math
-const CENTER_W = 320;
-const CENTER_H = 160;
-const NAV_W    = 200;
-const NAV_H    = 110;
-const GAP_X    = 90;   // horizontal gap between center and side blocks
-const GAP_Y    = 64;   // vertical gap between center and lower blocks
+const CENTER_W = 340;
+const CENTER_H = 240;
+const NAV_W    = 220;
+const NAV_H    = 170;
+const GAP_X    = 40;   // horizontal gap between blocks in the single row
+const BUBBLE_R = 8;    // inverter bubble radius
 
 export default function CadenceHome({ resumeData, navigate }) {
   const canvasRef    = useRef(null);
@@ -405,10 +405,10 @@ export default function CadenceHome({ resumeData, navigate }) {
   }, []);
 
   const navButtons = [
-    { label: 'Education',  page: 'resume',     desc: 'Academic background & degrees',    pos: 'left'  },
-    { label: 'Experience', page: 'experience', desc: 'Work & internship history', pos: 'right' },
-    { label: 'Projects',   page: 'projects',   desc: 'Engineering projects',      pos: 'bl'    },
-    { label: 'Contact',    page: 'contact',    desc: 'Get in touch',              pos: 'br'    },
+    { label: 'Projects',   page: 'projects',   desc: 'Engineering projects',             pos: 'll'   },
+    { label: 'Education',  page: 'resume',     desc: 'Academic background & degrees',    pos: 'l'    },
+    { label: 'Experience', page: 'experience', desc: 'Work & internship history',         pos: 'r'    },
+    { label: 'Contact',    page: 'contact',    desc: 'Get in touch',                     pos: 'rr'   },
   ];
 
   // Canvas centre
@@ -419,54 +419,42 @@ export default function CadenceHome({ resumeData, navigate }) {
   const cLeft = cx - CENTER_W / 2;
   const cTop  = cy - CENTER_H / 2;
 
-  // Positions for each nav block
+  // Positions for each nav block — all in a single horizontal row
+  // Order: Projects (ll) — Education (l) — [Jacob Xing] — Experience (r) — Contact (rr)
   const blockPos = {
-    left:  { left: cLeft - NAV_W - GAP_X,             top: cy - NAV_H / 2              },
-    right: { left: cLeft + CENTER_W + GAP_X,           top: cy - NAV_H / 2              },
-    bl:    { left: cx - NAV_W - 10,                    top: cTop + CENTER_H + GAP_Y     },
-    br:    { left: cx + 10,                            top: cTop + CENTER_H + GAP_Y     },
+    ll: { left: cLeft - (NAV_W + GAP_X) * 2, top: cy - NAV_H / 2 },
+    l:  { left: cLeft - NAV_W - GAP_X,        top: cy - NAV_H / 2 },
+    r:  { left: cLeft + CENTER_W + GAP_X,      top: cy - NAV_H / 2 },
+    rr: { left: cLeft + CENTER_W + GAP_X + NAV_W + GAP_X, top: cy - NAV_H / 2 },
   };
 
-  // 3 parallel wires per connection, offset ±6px perpendicular to wire direction.
-  // Each wire runs between the connecting-edge midpoints of both blocks.
-  const WIRE_OFFSETS = [-6, 0, 6];
+  const cMidLeft  = cLeft;
+  const cMidRight = cLeft + CENTER_W;
+  const cMidY     = cy;
 
-  // Midpoints of the centre block's edges
-  const cMidLeft   = cLeft;
-  const cMidRight  = cLeft + CENTER_W;
-  const cMidY      = cy;                   // vertical midpoint (left/right edges)
-  const cBotY      = cTop + CENTER_H;      // bottom edge y
-
-  // Midpoints of each nav block's connecting edge
-  const navMid = {
-    left:  { x: blockPos.left.left  + NAV_W,     y: blockPos.left.top  + NAV_H / 2 },
-    right: { x: blockPos.right.left,              y: blockPos.right.top + NAV_H / 2 },
-    bl:    { x: blockPos.bl.left    + NAV_W / 2,  y: blockPos.bl.top               },
-    br:    { x: blockPos.br.left    + NAV_W / 2,  y: blockPos.br.top               },
-  };
+  // Feedback loop geometry
+  const loopRightX   = blockPos.rr.left + NAV_W + 50;            // right stub after Contact bubble
+  const loopTopY     = cy - NAV_H / 2 - 120;                     // above all blocks
+  const loopLeftX    = blockPos.ll.left - 50;                     // left of Projects input
+  const loopInputX   = blockPos.ll.left;                          // Projects left vertex (input)
+  const loopPoints   = [
+    `${blockPos.rr.left + NAV_W},${cy}`,  // Contact bubble right
+    `${loopRightX},${cy}`,                // stub right
+    `${loopRightX},${loopTopY}`,          // up
+    `${loopLeftX},${loopTopY}`,           // left across top
+    `${loopLeftX},${cy}`,                 // down
+    `${loopInputX},${cy}`,                // right into Projects input
+  ].join(' ');
 
   const wires = [
-    // left block → center left edge (horizontal, offset vertically)
-    ...WIRE_OFFSETS.map(off => ({
-      x1: navMid.left.x,  y1: navMid.left.y  + off,
-      x2: cMidLeft,        y2: cMidY          + off,
-    })),
-    // center right edge → right block (horizontal, offset vertically)
-    ...WIRE_OFFSETS.map(off => ({
-      x1: cMidRight,       y1: cMidY          + off,
-      x2: navMid.right.x,  y2: navMid.right.y + off,
-    })),
-    // center bottom edge → bl block top (vertical, offset horizontally)
-    // wire lands on centre-block bottom directly above each nav block's top-centre
-    ...WIRE_OFFSETS.map(off => ({
-      x1: navMid.bl.x + off, y1: cBotY,
-      x2: navMid.bl.x + off, y2: navMid.bl.y,
-    })),
-    // center bottom edge → br block top (vertical, offset horizontally)
-    ...WIRE_OFFSETS.map(off => ({
-      x1: navMid.br.x + off, y1: cBotY,
-      x2: navMid.br.x + off, y2: navMid.br.y,
-    })),
+    // Projects (ll) → Education (l)
+    { x1: blockPos.ll.left + NAV_W, y1: cy, x2: blockPos.l.left,  y2: cy },
+    // Education (l) → center left edge
+    { x1: blockPos.l.left  + NAV_W, y1: cy, x2: cMidLeft,          y2: cMidY },
+    // center right edge → Experience (r)
+    { x1: cMidRight,                 y1: cMidY, x2: blockPos.r.left, y2: cy },
+    // Experience (r) → Contact (rr)
+    { x1: blockPos.r.left  + NAV_W, y1: cy, x2: blockPos.rr.left,  y2: cy },
   ];
 
   // The transform origin is the canvas centre so zoom is centred
@@ -537,37 +525,51 @@ export default function CadenceHome({ resumeData, navigate }) {
   // Total mobile canvas height needed (for scroll)
   const mobTotalH = mobNavTop + MOB_NAV_H * 2 + MOB_ROW_GAP + 40;
 
-  const identityCard = (cardLeft, cardTop, cardW) => (
-    <div
-      className="cad-identity-card"
-      style={{ left: cardLeft, top: cardTop, width: cardW, minHeight: MOB_CARD_H }}
-    >
-      <div className="cad-identity-inner">
-        <div className="cad-id-chip-symbol">
-          <svg width="48" height="48" viewBox="0 0 48 48">
-            <rect x="12" y="12" width="24" height="24" stroke="#00cc00" strokeWidth="1.5" fill="none"/>
-            <line x1="0" y1="18" x2="12" y2="18" stroke="#00cc00" strokeWidth="1.5"/>
-            <line x1="0" y1="24" x2="12" y2="24" stroke="#00cc00" strokeWidth="1.5"/>
-            <line x1="0" y1="30" x2="12" y2="30" stroke="#00cc00" strokeWidth="1.5"/>
-            <line x1="36" y1="18" x2="48" y2="18" stroke="#00cc00" strokeWidth="1.5"/>
-            <line x1="36" y1="24" x2="48" y2="24" stroke="#00cc00" strokeWidth="1.5"/>
-            <line x1="36" y1="30" x2="48" y2="30" stroke="#00cc00" strokeWidth="1.5"/>
-            <text x="24" y="27" textAnchor="middle" fill="#00cc00" fontSize="8" fontFamily="Courier New">JX</text>
-          </svg>
-        </div>
-        <div className="cad-id-info">
-          <div className="cad-id-name">{resumeData.name}</div>
-          <div className="cad-id-email">{resumeData.email}</div>
-          <div className="cad-id-role">{resumeData.role} · {resumeData.university}</div>
-          <div className="cad-id-social">
-            {resumeData.socialLinks.map((s, i) => (
-              <a key={i} href={s.url} className="cad-social-link" target="_blank" rel="noopener noreferrer">[{s.name}]</a>
-            ))}
+  const identityCard = (cardLeft, cardTop, cardW, cardH) => {
+    const triW = cardW - BUBBLE_R * 2 - 2;
+    const midY = cardH / 2;
+    const foX  = 12;                      // foreignObject left inset
+    const foW  = triW * 0.78;             // text area width inside triangle
+    const foH  = cardH - 24;              // text area height
+    const foY  = (cardH - foH) / 2;
+    return (
+      <svg
+        className="cad-identity-card"
+        style={{ left: cardLeft, top: cardTop, width: cardW, height: cardH, overflow: 'visible' }}
+      >
+        {/* triangle body */}
+        <polygon
+          points={`0,0 ${triW},${midY} 0,${cardH}`}
+          fill="rgba(0,0,0,0.92)"
+          stroke="#00cc00"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+        {/* bubble */}
+        <circle
+          cx={triW + BUBBLE_R + 1}
+          cy={midY}
+          r={BUBBLE_R}
+          fill="rgba(0,0,0,0.92)"
+          stroke="#00cc00"
+          strokeWidth="1.5"
+        />
+        {/* card content */}
+        <foreignObject x={foX} y={foY} width={foW} height={foH}>
+          <div xmlns="http://www.w3.org/1999/xhtml" className="cad-identity-inner" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="cad-id-name" style={{ fontSize: '18px' }}>{resumeData.name}</div>
+            <div className="cad-id-email">{resumeData.email}</div>
+            <div className="cad-id-role">{resumeData.role} · {resumeData.university}</div>
+            <div className="cad-id-social">
+              {resumeData.socialLinks.map((s, i) => (
+                <a key={i} href={s.url} className="cad-social-link" target="_blank" rel="noopener noreferrer">[{s.name}]</a>
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
+        </foreignObject>
+      </svg>
+    );
+  };
 
   return (
     <div className="cad-root">
@@ -608,7 +610,7 @@ export default function CadenceHome({ resumeData, navigate }) {
               <div className="cad-panel-row">symbol</div>
               <div className="cad-panel-row">layout</div>
             </div>
-            <div className="cad-panel-title" style={{marginTop:'64px'}}>Properties</div>
+            <div className="cad-panel-title" style={{marginTop:'330px'}}>Properties</div>
             <div className="cad-prop-row"><span className="cad-prop-key">cellName</span><span className="cad-prop-val">portfolio</span></div>
             <div className="cad-prop-row"><span className="cad-prop-key">libName</span><span className="cad-prop-val">jacob-xing</span></div>
             <div className="cad-prop-row"><span className="cad-prop-key">viewName</span><span className="cad-prop-val">schematic</span></div>
@@ -653,20 +655,56 @@ export default function CadenceHome({ resumeData, navigate }) {
                 ))}
               </svg>
 
-              {identityCard(mobCardLeft, mobCardTop, MOB_CARD_W)}
+              {identityCard(mobCardLeft, mobCardTop, MOB_CARD_W, MOB_CARD_H)}
 
               {navButtons.map((b, i) => {
                 const pos = mobBlockPos[i];
+                const W = MOB_NAV_W, H = MOB_NAV_H;
+                const triW = W - BUBBLE_R * 2 - 2;
+                const midY = H / 2;
+                const textX = triW * 0.38;
                 return (
-                  <button
+                  <svg
                     key={i}
                     className="cad-nav-big-btn"
-                    style={{ left: pos.left, top: pos.top, width: MOB_NAV_W, height: MOB_NAV_H }}
+                    style={{ left: pos.left, top: pos.top, width: W, height: H, overflow: 'visible' }}
                     onClick={() => navigate(b.page)}
                   >
-                    <span className="cad-nav-btn-label">{b.label}</span>
-                    <span className="cad-nav-btn-desc">{b.desc}</span>
-                  </button>
+                    <polygon
+                      points={`0,0 ${triW},${midY} 0,${H}`}
+                      fill="rgba(0,0,0,0.92)"
+                      stroke="#00aa00"
+                      strokeWidth="1.2"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx={triW + BUBBLE_R + 1}
+                      cy={midY}
+                      r={BUBBLE_R}
+                      fill="rgba(0,0,0,0.92)"
+                      stroke="#00aa00"
+                      strokeWidth="1.2"
+                    />
+                    <text
+                      x={textX}
+                      y={midY - 6}
+                      textAnchor="middle"
+                      fill="#00ff00"
+                      fontSize="11"
+                      fontWeight="bold"
+                      fontFamily="'Courier New', Courier, monospace"
+                    >{b.label}</text>
+                    <foreignObject x={textX - 44} y={midY + 2} width="88" height="28">
+                      <div xmlns="http://www.w3.org/1999/xhtml" style={{
+                        fontSize: '8px',
+                        color: '#669966',
+                        fontFamily: "'Courier New', Courier, monospace",
+                        textAlign: 'center',
+                        lineHeight: '1.3',
+                        wordBreak: 'break-word',
+                      }}>{b.desc}</div>
+                    </foreignObject>
+                  </svg>
                 );
               })}
             </div>
@@ -685,24 +723,72 @@ export default function CadenceHome({ resumeData, navigate }) {
                   <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
                     stroke="#00cccc" strokeWidth="1.2" opacity="0.85" />
                 ))}
+                {/* feedback loop: Contact output → up → left → down → Projects input */}
+                <polyline
+                  points={loopPoints}
+                  fill="none"
+                  stroke="#00cccc"
+                  strokeWidth="1.2"
+                  opacity="0.85"
+                />
               </svg>
 
-              {identityCard(cLeft, cTop, CENTER_W)}
+              {identityCard(cLeft, cTop, CENTER_W, CENTER_H)}
 
-              {/* ── Nav blocks ── */}
+              {/* ── Nav blocks (inverter shape) ── */}
               {navButtons.map((b, i) => {
                 const pos = blockPos[b.pos];
+                const W = NAV_W, H = NAV_H;
+                const triW = W - BUBBLE_R * 2 - 2; // triangle right tip x
+                const midY = H / 2;
+                const textX = triW * 0.38;
                 return (
-                  <button
+                  <svg
                     key={i}
                     className="cad-nav-big-btn"
-                    style={{ left: pos.left, top: pos.top, width: NAV_W, height: NAV_H }}
+                    style={{ left: pos.left, top: pos.top, width: W, height: H, overflow: 'visible' }}
                     onClick={() => navigate(b.page)}
                     onMouseEnter={() => setStatusText(b.desc)}
                   >
-                    <span className="cad-nav-btn-label">{b.label}</span>
-                    <span className="cad-nav-btn-desc">{b.desc}</span>
-                  </button>
+                    {/* triangle body */}
+                    <polygon
+                      points={`0,0 ${triW},${midY} 0,${H}`}
+                      fill="rgba(0,0,0,0.92)"
+                      stroke="#00aa00"
+                      strokeWidth="1.2"
+                      strokeLinejoin="round"
+                    />
+                    {/* bubble */}
+                    <circle
+                      cx={triW + BUBBLE_R + 1}
+                      cy={midY}
+                      r={BUBBLE_R}
+                      fill="rgba(0,0,0,0.92)"
+                      stroke="#00aa00"
+                      strokeWidth="1.2"
+                    />
+                    {/* label */}
+                    <text
+                      x={textX}
+                      y={midY - 8}
+                      textAnchor="middle"
+                      fill="#00ff00"
+                      fontSize="13"
+                      fontWeight="bold"
+                      fontFamily="'Courier New', Courier, monospace"
+                    >{b.label}</text>
+                    {/* desc */}
+                    <foreignObject x={textX - 56} y={midY + 2} width="112" height="32">
+                      <div xmlns="http://www.w3.org/1999/xhtml" style={{
+                        fontSize: '9px',
+                        color: '#669966',
+                        fontFamily: "'Courier New', Courier, monospace",
+                        textAlign: 'center',
+                        lineHeight: '1.3',
+                        wordBreak: 'break-word',
+                      }}>{b.desc}</div>
+                    </foreignObject>
+                  </svg>
                 );
               })}
             </div>

@@ -40,25 +40,32 @@ export default function ProjectsPage({ resumeData, navigate }) {
         </div>
       ))}
 
-      {/* ── Course projects placeholder ─────────────────────── */}
+      {/* ── Research ──────────────────────────────────────────── */}
+      {/*
       <div className="cad-section-header">
-        <div className="cad-section-title">Coursework Projects</div>
+        <div className="cad-section-title">Research</div>
         <div className="cad-section-line" />
       </div>
-      <div className="cad-card">
-        <div className="cad-card-header">
-          <div>
-            <div className="cad-card-title">[INSERT: Course Project Name]</div>
-            <div className="cad-card-subtitle">
-              <span className="cad-tag">[INSERT tech]</span>
+      {resumeData.research.map((r, i) => (
+        <div key={i} className="cad-card">
+          <div className="cad-card-header">
+            <div>
+              <div className="cad-card-title">{r.role}</div>
+              <div className="cad-card-subtitle">{r.group}</div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+              <div className="cad-card-period">{r.period}</div>
+              <div className="cad-card-period">{r.location}</div>
             </div>
           </div>
-          <div className="cad-card-period">[INSERT: semester]</div>
+          <ul className="cad-card-body" style={{ marginTop: '8px' }}>
+            {r.bullets.map((b, j) => (
+              <li key={j}>{b}</li>
+            ))}
+          </ul>
         </div>
-        <div className="cad-card-body" style={{ marginTop: '8px' }}>
-          [INSERT: brief description of the project and your contribution]
-        </div>
-      </div>
+      ))}
+      */}
     </CadencePage>
   );
 }
