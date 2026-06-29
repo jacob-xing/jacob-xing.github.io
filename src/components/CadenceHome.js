@@ -246,12 +246,13 @@ function StatusBar({ text, coords = '' }) {
  */
 
 // Block dimensions (px) — used for both CSS sizing and SVG wire math
-const CENTER_W = 340;
-const CENTER_H = 240;
-const NAV_W    = 220;
-const NAV_H    = 170;
-const GAP_X    = 40;   // horizontal gap between blocks in the single row
-const BUBBLE_R = 8;    // inverter bubble radius
+const CENTER_H        = 300;
+const CENTER_BUBBLE_R = 27;                                                         // 3/4 of previous 36
+const CENTER_W        = Math.round(CENTER_H * Math.sqrt(3) / 2) + CENTER_BUBBLE_R * 2 + 2;
+const NAV_H           = 170;
+const NAV_BUBBLE_R    = Math.round(CENTER_BUBBLE_R * NAV_H / CENTER_H);             // proportional = 15
+const NAV_W           = Math.round(NAV_H    * Math.sqrt(3) / 2) + NAV_BUBBLE_R * 2 + 2;
+const GAP_X           = 40;   // horizontal gap between blocks in the single row
 
 export default function CadenceHome({ resumeData, navigate }) {
   const canvasRef    = useRef(null);
@@ -526,7 +527,7 @@ export default function CadenceHome({ resumeData, navigate }) {
   const mobTotalH = mobNavTop + MOB_NAV_H * 2 + MOB_ROW_GAP + 40;
 
   const identityCard = (cardLeft, cardTop, cardW, cardH) => {
-    const triW = cardW - BUBBLE_R * 2 - 2;
+    const triW = cardW - CENTER_BUBBLE_R * 2 - 2;
     const midY = cardH / 2;
     const foX  = 12;                      // foreignObject left inset
     const foW  = triW * 0.78;             // text area width inside triangle
@@ -547,9 +548,9 @@ export default function CadenceHome({ resumeData, navigate }) {
         />
         {/* bubble */}
         <circle
-          cx={triW + BUBBLE_R + 1}
+          cx={triW + CENTER_BUBBLE_R + 1}
           cy={midY}
-          r={BUBBLE_R}
+          r={CENTER_BUBBLE_R}
           fill="rgba(0,0,0,0.92)"
           stroke="#00cc00"
           strokeWidth="1.5"
@@ -660,7 +661,8 @@ export default function CadenceHome({ resumeData, navigate }) {
               {navButtons.map((b, i) => {
                 const pos = mobBlockPos[i];
                 const W = MOB_NAV_W, H = MOB_NAV_H;
-                const triW = W - BUBBLE_R * 2 - 2;
+                const mobBubbleR = Math.round(CENTER_BUBBLE_R * H / CENTER_H);
+                const triW = W - mobBubbleR * 2 - 2;
                 const midY = H / 2;
                 const textX = triW * 0.38;
                 return (
@@ -678,9 +680,9 @@ export default function CadenceHome({ resumeData, navigate }) {
                       strokeLinejoin="round"
                     />
                     <circle
-                      cx={triW + BUBBLE_R + 1}
+                      cx={triW + mobBubbleR + 1}
                       cy={midY}
-                      r={BUBBLE_R}
+                      r={mobBubbleR}
                       fill="rgba(0,0,0,0.92)"
                       stroke="#00aa00"
                       strokeWidth="1.2"
@@ -739,7 +741,7 @@ export default function CadenceHome({ resumeData, navigate }) {
               {navButtons.map((b, i) => {
                 const pos = blockPos[b.pos];
                 const W = NAV_W, H = NAV_H;
-                const triW = W - BUBBLE_R * 2 - 2; // triangle right tip x
+                const triW = W - NAV_BUBBLE_R * 2 - 2; // triangle right tip x
                 const midY = H / 2;
                 const textX = triW * 0.38;
                 return (
@@ -760,9 +762,9 @@ export default function CadenceHome({ resumeData, navigate }) {
                     />
                     {/* bubble */}
                     <circle
-                      cx={triW + BUBBLE_R + 1}
+                      cx={triW + NAV_BUBBLE_R + 1}
                       cy={midY}
-                      r={BUBBLE_R}
+                      r={NAV_BUBBLE_R}
                       fill="rgba(0,0,0,0.92)"
                       stroke="#00aa00"
                       strokeWidth="1.2"
