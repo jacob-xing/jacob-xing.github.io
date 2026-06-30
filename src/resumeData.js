@@ -180,11 +180,11 @@ const resumeData = {
   honors: [
     "Graduate Fellow, Texas A&M University",
     "Summa Cum Laude, University of Minnesota",
-    "Dean's List – Fall 2022, Spring 2023, Fall 2023, Spring 2024, Fall 2024",
+    "Dean's List – Fall 2022, Spring 2023, Fall 2023, Spring 2024, Fall 2024, Spring 2025, Fall 2025, Spring 2026",
     "Distinction, University of Minnesota",
-    "Thor Family Scholarship Recipient",
-    "Oscar Schott UG Scholarship Recipient",
-    "C.A. Syvertson Scholarship Recipient",
+    "Thor Family Scholarship, University of Minnesota",
+    "Oscar Schott UG Scholarship, University of Minnesota",
+    "C.A. Syvertson Scholarship, University of Minnesota",
   ],
 
   skills: [
